@@ -1,25 +1,37 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
+  <head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/application.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
   <body>
-    {% for greeting in greetings %}
-      {% if greeting.author %}
-        <b>{{ greeting.author.nickname() }}</b> wrote:
-      {% else %}
-        An anonymous person wrote:
+    <div id="container">
+      {% for greeting in greetings %}
+        {% if greeting.author %}
+          <b>{{ greeting.author.nickname() }}</b> wrote:
+        {% else %}
+          An anonymous person wrote:
+        {% endif %}
+        <blockquote>{{ greeting.content }}</blockquote>
+      {% endfor %}
+      <hr>
+      {% if greetings.count() > 0 %}
+        <b>Message count: {{ greetings.count(10) }} </b>
       {% endif %}
-      <blockquote>{{ greeting.content }}</blockquote>
-    {% endfor %}
-
-    {% if greetings.count() > 0 %}
-      <p>Message count: {{ greetings.count() }} </p>
-    {% endif %}
-
-    <form action="/sign" method="post" onsubmit="return confirm('Are you sure you want to post your message?')">
-      <div><textarea name="content" rows="3" cols="60"></textarea></div>
-      <div><input type="submit" value="Sign Guestbook"></div>
-    </form>
-
+      <div class="form">
+        <form action="/sign" method="post" onsubmit="return confirm('Are you sure you want to post your message?')">
+          <div><textarea class="form-control" id="focusedInput" name="content" rows="3"></textarea></div>
+          <div><button class="btn btn-primary" id='btn-submit' type="submit" value="Sign Guestbook">Submit</button></div>
+        </form>
+      </div>
+    </div>
+    <div id="footer">
+      &nbsp;
+    </div>
   </body>
 </html>
 {% endautoescape %}

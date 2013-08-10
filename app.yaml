@@ -6,7 +6,11 @@ threadsafe: yes
 
 handlers:
 - url: /stylesheets
-  static_dir: stylesheets
+  static_dir: assets/stylesheets
+- url: /javascripts
+  static_dir: assets/javascripts
+- url: /images
+  static_dir: assets/images
 - url: .*
   script: guestbook.app
 
