@@ -17,9 +17,15 @@
 import cgi
 import datetime
 import webapp2
+import os
+import jinja2
 
 from google.appengine.ext import ndb
 from google.appengine.api import users
+
+JINJA_ENVIRONMENT = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+        extensions=['jinja2.ext.autoescape'])
 
 guestbook_key = ndb.Key('Guestbook', 'default_guestbook')
 
@@ -31,7 +37,6 @@ class Greeting(ndb.Model):
 
 class MainPage(webapp2.RequestHandler):
   def get(self):
-    self.response.out.write('<html><body>')
 
     greetings = ndb.gql('SELECT * '
                         'FROM Greeting '
@@ -39,26 +44,12 @@ class MainPage(webapp2.RequestHandler):
                         'ORDER BY date DESC LIMIT 10',
                         guestbook_key)
 
-    for greeting in greetings:
-      if greeting.author:
-        self.response.out.write('<b>%s</b> wrote:' % greeting.author.nickname())
-      else:
-        self.response.out.write('An anonymous person wrote:')
-      self.response.out.write('<blockquote>%s</blockquote>' %
-                              cgi.escape(greeting.content))
+    template_values = {
+        'greetings': greetings,
+    }
 
-    if greetings.count() > 0:
-      self.response.out.write('<p>Message count: %d</p>' % greetings.count())
-
-
-    self.response.out.write("""
-          <form action="/sign" method="post" onsubmit="return confirm('Are you sure you want to post your message?')">
-            <div><textarea name="content" rows="3" cols="60"></textarea></div>
-            <div><input type="submit" value="Sign Guestbook"></div>
-          </form>
-        </body>
-      </html>""")
-
+    template = JINJA_ENVIRONMENT.get_template('index.html')
+    self.response.write(template.render(template_values))
 
 class Guestbook(webapp2.RequestHandler):
   def post(self):

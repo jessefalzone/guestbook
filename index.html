@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <body>
+    {% for greeting in greetings %}
+      {% if greeting.author %}
+        <b>{{ greeting.author.nickname() }}</b> wrote:
+      {% else %}
+        An anonymous person wrote:
+      {% endif %}
+      <blockquote>{{ greeting.content }}</blockquote>
+    {% endfor %}
+
+    {% if greetings.count() > 0 %}
+      <p>Message count: {{ greetings.count() }} </p>
+    {% endif %}
+
+    <form action="/sign" method="post" onsubmit="return confirm('Are you sure you want to post your message?')">
+      <div><textarea name="content" rows="3" cols="60"></textarea></div>
+      <div><input type="submit" value="Sign Guestbook"></div>
+    </form>
+
+  </body>
+</html>
+{% endautoescape %}
