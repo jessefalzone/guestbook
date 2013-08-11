@@ -6,27 +6,45 @@
     <script type="text/javascript" src="/javascripts/application.js"></script>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   </head>
+  <title>Guestbook</title>
   <body>
     <div id="container">
       <div class="header">
-        <h2>Guestbook</h2>
+        <div id="nav-list">
+          <ul>
+            <li>Home</li>
+            <li>About</li>
+            <li class="btn btn-primary">Guestbook</li>
+          </ul>
+        </div>
+        <h1>Guestbook</h1>
         <hr>
       </div>
+      <div id="greetings">
       {% for greeting in greetings %}
         {% if greeting.author %}
-          <b>{{ greeting.author.nickname() }}</b> wrote:
+          <b>{{ greeting.author }}</b> wrote:
         {% else %}
-          <p class="anon-user">An anonymous person wrote:</p>
+          An anonymous person wrote:
         {% endif %}
         <blockquote>{{ greeting.content }}</blockquote>
       {% endfor %}
-      <hr>
+      </div>
       {% if greetings.count() > 0 %}
-        <h4 id="count">Message count: {{ greetings.count(10) }} </h4>
+        <hr>
+        <h4 id="count">{{ greetings.count(10) }} <!-- Max num of posts is 10, so limit count to 10 -->
+        {% if greetings.count() == 1 %}
+          message</h4>
+        {% else %}
+          messages</h4>
+        {% endif %}
+      {% else %}
+        There are no messages.
+        <hr>
       {% endif %}
       <div class="form">
         <form action="/sign" method="post" onsubmit="return confirm('Are you sure you want to post your message?')">
-          <div><input class="form-control" id="username" name="username" placeholder="Your name (optional)" rows="1"></input>
+          <div><input class="form-control" id="username" name="author" placeholder="Your name (optional)" rows="1"></input>
           <div><textarea class="form-control" id="focusedInput" name="content" rows="4" placeholder="Message"></textarea></div>
           <div><button class="btn btn-primary" id='btn-submit' type="submit" value="Sign Guestbook">Submit</button></div>
         </form>

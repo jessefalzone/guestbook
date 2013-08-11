@@ -7,4 +7,7 @@ $(document).ready(function() {
       $('#btn-submit').addClass('disabled');
     }
   });
+  $('#nav-list li').hover(function(){
+    $(self).addClass('btn btn-primary'); 
+  });
 });
