@@ -30,7 +30,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 guestbook_key = ndb.Key('Guestbook', 'default_guestbook')
 
 class Greeting(ndb.Model):
-  author = ndb.UserProperty()
+  author = ndb.TextProperty()
   content = ndb.TextProperty()
   date = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -55,10 +55,8 @@ class Guestbook(webapp2.RequestHandler):
   def post(self):
     greeting = Greeting(parent=guestbook_key)
 
-    if users.get_current_user():
-      greeting.author = users.get_current_user()
-
     greeting.content = self.request.get('content')
+    greeting.author = self.request.get('author')
     greeting.put()
     self.redirect('/')
 
